@@ -1,0 +1,166 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="./template.xhtml">
+
+    <ui:define name="title">
+        Gestion des Ues organises
+    </ui:define>
+
+    <ui:define name="top">
+    </ui:define>
+
+    <ui:define name="search" >
+        <h:form id="searchF">
+            <div class="cell">
+                <p:outputLabel value="Section"/>
+                <p:selectOneMenu id="section" 
+                                 value="#{organizedUeController.search.section}" >
+                    <p:ajax event="valueChange" update="academicYearOption listF detailF" listener="#{organizedUeController.doSearch()}"/>
+                    <f:selectItems value="#{sectionController.itemsAvailableSelectOne}"/>
+                </p:selectOneMenu>
+            </div>
+            <div class="cell">
+                <p:outputLabel value="Année scolaire"/>
+                <p:selectOneMenu id="academicYearOption" value="#{organizedUeController.search.academicYear}" dynamic="true">
+                    <p:ajax event="valueChange" update="listF detailF" listener="#{organizedUeController.doSearch()}"/>
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems value="#{organizedUeController.getAcademicOptions(organizedUeController.search)}" />
+                </p:selectOneMenu>
+            </div>
+            
+            <div class="cell">
+                <p:outputLabel value="Copier vers année..."/>
+                <p:selectOneMenu id="academicYearOptionCopyTo" value="#{organizedUeController.search.academicYearCopyTo}" dynamic="true">
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems value="#{organizedUeController.getAcademicOptions(organizedUeController.search)}" />
+                </p:selectOneMenu>
+            </div>
+
+            <div class="cell">
+                <div style="clear:both">
+                    <p:commandButton class="searchButton" value="Copier Organisation"
+                                     action="#{organizedUeController.copyOue()}"
+                                     update="listF detailF searchF">                         
+                    </p:commandButton>
+                </div>
+            </div>
+            
+            <div class="cell">
+                <div style="clear:both">
+                    <p:commandButton class="searchButton" value="Supprimer Organisation"
+                                     action="#{organizedUeController.removeOrganisation()}"
+                                     update="listF detailF searchF">                         
+                    </p:commandButton>
+                </div>
+            </div>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="list">
+        <div id="list">
+            <h:form id="listF">
+                <p:dataTable id="oUe"
+                             var="item" 
+                             value="#{organizedUeController.items}"
+                             selection="#{organizedUeController.selected}"
+                             selectionMode="single"
+                             rowKey="#{item.organizedUeId}"
+                             scrollable="true" scrollHeight="350">
+
+                    <p:ajax event="rowSelect" update="detailF"/>
+                    <p:column headerText="Nom" class="dtTD" >                       
+                        <h:outputText value="#{item.ue.name}" />
+                    </p:column> 
+                    <p:column headerText="Date de debut" class="dtTD" > 
+                       <h:outputText value="#{item.startDate}" >
+                            <f:convertDateTime pattern="EEE dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column>
+                    <p:column headerText="Date de fin" class="dtTD" > 
+                        <h:outputText value="#{item.endDate}" >
+                            <f:convertDateTime pattern="EEE dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column> 
+                </p:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+    <ui:define name="detail">
+        <h:form id="detailF">
+            <fieldset>
+                <legend id="detailLegend">Ue Organises</legend>
+                <div class="cell">
+                    <p:outputLabel value="Section"/>
+                    <p:inputText value="#{organizedUeController.selected.ue.section.name}" readonly="true" />
+                </div>
+                <div class="cell">
+                    <p:outputLabel value="UE"/>
+                    <p:selectOneMenu id="ue" 
+                                     value="#{organizedUeController.selected.ue}" >
+                        <f:selectItems value="#{ueController.getItemsAvailableSelectOneUe(organizedUeController.search)}"/>
+                    </p:selectOneMenu>
+                </div>
+                <div class="cell">
+                    <p:outputLabel value="Nom"/>
+                    <p:inputText value="#{organizedUeController.selected.name}" />
+                </div>
+                <div class="cell">
+                    <p:outputLabel for="popup" value="Date de debut"/>
+                    <p:calendar id="popup" pattern="dd-MM-yyyy" value="#{organizedUeController.selected.startDate}"/>
+                </div>
+                <div class="cell">
+                    <p:outputLabel value="Date de fin"/>
+                    <p:inputText value="#{organizedUeController.selected.endDate}" readonly="true">
+                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                    </p:inputText>
+                </div>
+                <div class="cell">
+                    <p:outputLabel value="Niveau"/>
+                    <p:selectOneMenu id="level"
+                                     value="#{organizedUeController.selected.level}" 
+                                     style="width : 290px;">
+                        <f:selectItems value="#{levelController.itemsAvailableSelectOne}" />
+                    </p:selectOneMenu>
+                </div>
+                <div class="cell">
+                    <fieldset>
+                        <legend id="detailPersonLegend">Enseignants de l'UE</legend>
+                        <p:selectManyMenu id="selectManyMenuTeacherDT" var="t" 
+                                          value="#{organizedUeController.selectedTeachers}"
+                                          showCheckbox="true"
+                                          scrollHeight="150"
+                                          >
+                            <f:selectItems value="#{personController.teachers}" var="teacher"
+                                           itemLabel="#{teacher.name}" itemValue="#{teacher}"/>
+
+                            <p:column headerText="Nom">
+                                <h:outputText value="#{t.name}" />
+                            </p:column>
+
+                            <p:column headerText="Prenom">
+                                <h:outputText value="#{t.firstName}" />
+                            </p:column>
+
+                        </p:selectManyMenu>
+                    </fieldset>
+                </div>
+
+                <div style="clear:both;">
+                    <h:commandButton class="searchButton" action="#{organizedUeController.doUpdate()}" 
+                                     value="Sauver" style="margin-top: 6px;"/>
+                    <h:commandButton class="searchButton" action="#{organizedUeController.prepareCreate()}" 
+                                     value="Nouveau" style="margin-top: 6px;"/>                        
+                    <h:commandButton class="searchButton" action="#{organizedUeController.doDelete()}" 
+                                     value="Supprimer" style="margin-top: 6px;"/>
+                </div>
+            </fieldset>
+        </h:form>  
+    </ui:define>
+
+</ui:composition>

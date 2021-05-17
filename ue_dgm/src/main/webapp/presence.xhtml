@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns:p="http://primefaces.org/ui"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                template="./template.xhtml">
+
+
+    <ui:define name="title">
+        Gestion des présences
+    </ui:define>
+
+
+    <ui:define name="top">
+    </ui:define>
+    
+    <ui:define name="search" >
+        <h:form id="searchF">
+            
+            <div class="cell">
+                <p:outputLabel value="Section"/>
+                <p:selectOneMenu id="section" value="#{presenceController.search.section}" style="width: 190px">
+                    <f:selectItems value="#{sectionController.itemsAvailableSelectOne}"/>
+                    <p:ajax event="valueChange" update="schoolYear level listF" listener="#{presenceController.doSearch()}"/>
+                </p:selectOneMenu>
+            </div>
+            
+            <div class="cell">
+                <p:outputLabel value="Année scolaire"/>
+                <p:selectOneMenu id="schoolYear" value="#{presenceController.search.schoolYear}" dynamic="true" style="width: 130px">
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems value="#{presenceController.findSchoolYear(presenceController.search)}" />
+                    <p:ajax event="valueChange" update="level listF" listener="#{presenceController.doSearch()}"/>
+                </p:selectOneMenu>
+            </div>
+            
+            <div class="cell">
+                <p:outputLabel value="Niveau"/>
+                <p:selectOneMenu id="level" value="#{presenceController.search.level}" dynamic="true" style="width: 170px">
+                    <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                    <f:selectItems value="#{presenceController.getLevels(presenceController.search)}" />
+                    <p:ajax event="valueChange" update="listF" listener="#{presenceController.doSearch()}"/>
+                </p:selectOneMenu>
+            </div>
+            
+            <div class="cell">
+                <p:outputLabel value="Date"/>
+                <p:datePicker id="basic" value="#{presenceController.selectedDate}"/>
+            </div>
+
+        </h:form>
+    </ui:define>
+
+
+   <ui:define name="list">
+       <div id="list">
+            <h:form id="listF">
+                <p:dataTable id="oue"
+                            var="item" 
+                            value="#{presenceController.items}"
+                            selection="#{presenceController.selected}"
+                            selectionMode="single"
+                            rowKey="#{item.organizedUeId}"
+                            scrollable="true" scrollHeight="350">
+
+                    <p:column headerText="Nom" class="dtTD" >                                              
+                        <h:commandLink  class="ListElement" 
+                                        style="width: 150px;"
+                                        action="#{presenceController.searchOueDatePresences(item)}" 
+                                        value="#{item.ue.name}">
+                        </h:commandLink>                 
+                    </p:column> 
+                    
+                    <p:column headerText="Date début" class="dtTD" >                       
+                        <h:outputText value="#{item.startDate}" >
+                            <f:convertDateTime pattern="EEE dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column> 
+                    
+                    <p:column headerText="Date fin" class="dtTD" >                       
+                        <h:outputText value="#{item.endDate}">
+                            <f:convertDateTime pattern="EEE dd-MM-yyyy" />
+                        </h:outputText>
+                    </p:column> 
+
+                </p:dataTable>
+            </h:form>
+        </div>  
+    </ui:define>  
+    
+
+
+ 
+<ui:define name="detail">
+        <h:form id="detailF">
+                <p:dataTable 
+                    var="item2"
+                    value="#{presenceController.presencePersonVMs}"
+                    editable="true"
+                    editMode="cell"
+                    rowIndexVar="row">
+                    
+                    <p:column headerText="Etudiant" style="width:50px;">
+                        <h:outputText value="#{item2.person.name}" />
+                    </p:column>
+
+                    <p:column rendered="#{presenceController.plannings.size()>0}" style="width:50px;">
+                        <f:facet name="header">
+                            <h:outputText value="#{presenceController.plannings.get(0).seanceDate}" style="width:50px;" >
+                                <f:convertDateTime pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </f:facet>
+                        <p:selectBooleanCheckbox value="#{item2.presences.get(0).isPresent}" style="width:50px;"/>
+                    </p:column>
+
+                    <p:column rendered="#{presenceController.plannings.size()>1}" style="width:50px;">
+                        <f:facet name="header">
+                            <h:outputText value="#{presenceController.plannings.get(1).seanceDate}" style="width:50px;">
+                                <f:convertDateTime pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </f:facet>
+                        <p:selectBooleanCheckbox value="#{item2.presences.get(1).isPresent}" style="width:50px;"/>   
+                    </p:column>
+
+                    <p:column rendered="#{presenceController.plannings.size()>2}" style="width:50px;">
+                        <f:facet name="header">
+                            <h:outputText value="#{presenceController.plannings.get(2).seanceDate}" style="width:50px;">
+                                <f:convertDateTime pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </f:facet>
+                        <p:selectBooleanCheckbox value="#{item2.presences.get(2).isPresent}" style="width:50px;"/>   
+                    </p:column>  
+
+                    <p:column rendered="#{presenceController.plannings.size()>3}" style="width:50px;">
+                        <f:facet name="header">
+                            <h:outputText value="#{presenceController.plannings.get(3).seanceDate}" style="width:50px;">
+                                <f:convertDateTime pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </f:facet>
+                        <p:selectBooleanCheckbox value="#{item2.presences.get(3).isPresent}" style="width:50px;"/>   
+                    </p:column> 
+                    
+                    <p:column rendered="#{presenceController.plannings.size()>4}" style="width:50px;">
+                        <f:facet name="header">
+                            <h:outputText value="#{presenceController.plannings.get(4).seanceDate}" style="width:50px;">
+                                <f:convertDateTime pattern="dd-MM-yyyy"/>
+                            </h:outputText>
+                        </f:facet>
+                        <p:selectBooleanCheckbox value="#{item2.presences.get(4).isPresent}" style="width:50px;"/>   
+                    </p:column>    
+
+                </p:dataTable>
+        </h:form> 
+    </ui:define>
+
+    </ui:composition>
+    
+</html>

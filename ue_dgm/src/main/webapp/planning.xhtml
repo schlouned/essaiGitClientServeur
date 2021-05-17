@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui"  
+                xmlns:h="http://java.sun.com/jsf/html">
+    <ui:define name="title">Gestion des planning</ui:define>    
+    <ui:define name="top">
+    </ui:define>
+    <ui:define name="menu">
+    </ui:define>
+    <ui:define name="search">
+        <h:form id="searchF">
+            <div class="cell">
+                <p:outputLabel value="Section"/>
+                <p:selectOneMenu id="section" value="#{planningController.search.section}" >
+                    <p:ajax event="valueChange" update="academicYearOption  detailF" listener="#{planningController.doSearch()}"/>
+                    <f:selectItems value="#{sectionController.itemsAvailableSelectOne}"/>
+                </p:selectOneMenu>
+            </div>
+
+
+            <div class="cell">
+                <p:outputLabel value="Année scolaire"/>
+                <p:selectOneMenu id="academicYearOption" value="#{planningController.search.academicYear}" dynamic="true">
+                    <p:ajax event="valueChange" update="detailF" listener="#{planningController.doSearch()}"/>
+                    <f:selectItem itemLabel="---" itemValue="---"/>
+                    <f:selectItems value="#{planningController.academicOptions}" />
+                </p:selectOneMenu>
+            </div>
+
+
+            <div class="cell">
+                <p:outputLabel value="Ue Organisée"/>
+                <p:selectOneMenu id="organizedUe" value="#{planningController.search.organizedUe}" >
+                    <p:ajax event="valueChange" update="academicYearOption  detailF" listener="#{planningController.doSearch()}"/>
+                    <f:selectItems value="#{organizedUeController.itemsAvailableSelectOne}"/>
+                </p:selectOneMenu>
+            </div>
+
+
+            <div style="clear:both">
+                <p:commandButton class="searchButton" value="Générer le planning"
+                                 action="#{planningController.createPlanning()}"
+                                 update="detailF searchF">                         
+                </p:commandButton>
+            </div>
+
+
+        </h:form>
+
+
+
+
+
+
+
+    </ui:define>
+    <ui:define name="detail">
+        <h:form id="detailF">
+            <p:growl id="messages" showDetail="true" />
+            <h:panelGrid columnClasses="value">
+                <h3 style="margin-top: 0">Planning</h3>
+                <p:schedule id="schedule" 
+                            value="#{planningController.eventModel}" 
+                            widgetVar="myschedule" 
+                            initialDate="#{planningController.scheduleInitialDate}"
+                            style="width: 1000px;">
+                    <p:ajax event="dateSelect" listener="#{planningController.onDateSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                    <p:ajax event="eventSelect" listener="#{planningController.onEventSelect}" update="eventDetails" oncomplete="PF('eventDialog').show();" />
+                    <p:ajax event="eventMove" listener="#{planningController.onEventMove}" update="messages" />
+                    <p:ajax event="eventResize" listener="#{scheduleView.onEventResize}" update="messages" />
+                </p:schedule>
+            </h:panelGrid>
+            <p:dialog widgetVar="eventDialog" header="Event Details" 
+                      showEffect="clip" hideEffect="clip">
+                <h:panelGrid id="eventDetails" columns="2">
+                    <p:outputLabel for="title" value="Titles:" />
+                    <p:outputLabel id="title" value="#{planningController.event.title}" />
+
+                    <p:outputLabel for="organizedUe" value="Ue organise " />
+                    <h:selectOneMenu id="organizedUe" 
+                                     value="#{OrganizedUe.event.data.organizedUe}">
+                        <f:selectItems value="#{organizedUeController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+
+                    <p:outputLabel for="person" value="Enseignant " />
+                    <h:selectOneMenu id="person" 
+                                     value="#{PersonController.event.data.person}">
+                        <f:selectItems value="#{personController.itemsAvailableSelectOne}"/>
+                    </h:selectOneMenu>
+
+                    <p:outputLabel for="room" value="class room " />
+                    <p:inputText id="room" value="#{PlanningController.event.data.room}" />
+
+                    <p:outputLabel for="seanceDate" value="From" />
+                    <p:calendar id="seanceDate" value="#{PlanningController.event.data.seanceDate}" pattern="dd/MM/yyyy HH:mm"/>
+
+
+
+                    <p:outputLabel for="startHour" value="To" />
+                    <p:calendar id="startHour" value="#{PlanningController.event.data.startHour}" pattern="dd/MM/yyyy HH:mm"/>
+
+
+                    <p:outputLabel for="allDay" value="All Day:" />
+                    <h:selectBooleanCheckbox id="allDay" value="#{PlanningController.event.allDay}" />
+
+                    <p:commandButton type="reset" value="Reset" />
+                    <p:commandButton id="addButton" value="Sauver" action="#{PlanningController.addEvent}" 
+                                     oncomplete="PF('myschedule').update();PF('eventDialog').hide();" />
+                </h:panelGrid>
+            </p:dialog>  
+            <div style="clear:both;">
+                <h:commandButton class="searchButton" action="#{planningController.doUpdate()}" 
+                                 value="Sauver" style="margin-top: 6px;"/>
+                <h:commandButton class="searchButton" action="#{planningController.prepareCreate()}" 
+                                 value="Nouveau" style="margin-top: 6px;"/>                        
+                <h:commandButton class="searchButton" action="#{planningController.doDelete()}" 
+                                 value="Supprimer" style="margin-top: 6px;"/>
+
+            </div>
+
+        </h:form>
+    </ui:define>
+</ui:composition>

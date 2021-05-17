@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ui:composition template="/template.xhtml"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html">
+    <ui:define name="title">Gestion des Sections</ui:define>    
+    <ui:define name="top">
+        <!--<h2>Gestion des Sections</h2>-->
+    </ui:define>
+    <ui:define name="menu">
+    </ui:define>
+    <ui:define name="search">
+        <h:form id="searchF">
+            <div class="cell">
+                <label>Section</label>
+                <h:inputText value="#{sectionController.search.name}" />
+            </div>
+            <div class="cell">
+                <label>Description</label>
+                <h:inputText value="#{sectionController.search.description}" />
+            </div>
+            <div class="cell">
+                <label>Personne</label>
+                <h:inputText value="#{sectionController.search.personLastName}" />
+            </div>
+            <div style="clear:both">
+                <h:commandButton class="searchButton" value="Rechecher"
+                                 action="#{sectionController.doSearch()}" >   
+                        <f:ajax execute="@form" render=":listF :detailF"/>
+                </h:commandButton>
+            </div>
+        </h:form>
+    </ui:define>
+    <ui:define name="list">
+        <div id="list">
+            <h:form id="listF">
+                <h:dataTable var="item" 
+                             value="#{sectionController.items}" 
+                             cellspacing="0" 
+                             cellpadding="0" 
+                             border="0"
+                             class="dtTable">
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Nom" />
+                        </f:facet>
+                        <h:commandLink  class="ListElement" 
+                                        style="width: 80px;"
+                                        action="#{sectionController.prepareEdit(item)}" 
+                                        value="#{item.name}" >
+                            <f:ajax execute="@form" render=":detailF"/>
+                        </h:commandLink>
+                    </h:column>         
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Description"  />
+                        </f:facet>
+                        <h:outputText value="#{item.description}" class="ListElement" 
+                                      style="width: 200px;" />
+                    </h:column> 
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Person" />
+                        </f:facet>
+                        <h:outputText value="#{item.person.name}" class="ListElement" 
+                                      style="width: 80px;" />
+                    </h:column>                
+                </h:dataTable>
+            </h:form>
+        </div>   
+    </ui:define>
+    <ui:define name="detail">
+        <h:form id="detailF">
+            <fieldset>
+                <legend id="detailLegend">Section</legend>
+                <div class="cell">
+                    <label>Nom</label>
+                    <h:inputText value="#{sectionController.selected.name}" />
+                </div>
+                <div class="cell">
+                    <label>Description</label>
+                    <h:inputText value="#{sectionController.selected.description}" />
+                </div>
+                <div class="cell">
+                    <label>Personne</label>
+                    <h:selectOneMenu id="personSOM"
+                                     converter="personConverter"
+                                     value="#{sectionController.selected.person}" 
+                                     style="width : 290px;">
+                        <f:selectItems value="#{personController.persons}" />
+                    </h:selectOneMenu>
+                </div>
+                <div style="clear:both;">
+                    <h:commandButton class="searchButton" action="#{sectionController.doUpdate()}" 
+                                     value="Sauver" style="margin-top: 6px;"/>
+                    <h:commandButton class="searchButton" action="#{sectionController.prepareCreate()}" 
+                                     value="Nouveau" style="margin-top: 6px;"/>                        
+                    <h:commandButton class="searchButton" action="#{sectionController.doDelete()}" 
+                                     value="Supprimer" style="margin-top: 6px;"/>
+                </div>
+            </fieldset>
+        </h:form>            
+    </ui:define>
+</ui:composition>
