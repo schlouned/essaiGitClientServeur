@@ -1,0 +1,208 @@
+/* 
+    Created on : May 21, 2016, 11:13:57 AM
+    Author     : esc
+*/
+
+.cell {
+    float:left;
+    margin:2px;
+    width: 400px;
+    font-size: 15px;
+}
+
+input {
+    width: 290px;
+    background-color:#FFF3F3;
+    padding:3px;
+    border:1px solid #3371ff;
+    border-radius:5px;
+}
+
+label {
+    display: inline-block;
+    /*border:1px red solid;*/
+    width: 100px;
+    vertical-align: top;
+}
+
+#detail {
+    left: 506px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    padding : 8px;
+    overflow: auto;
+    min-height:30px;
+    min-width: 504px;
+    /*background-image: url("#{resource['images/bird.JPG']}");   */
+}
+
+#thumbnails {
+    left: 220px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 10px;
+    margin-bottom: 4px;
+    padding : 8px;
+    border-width: 2px 2px 2px 2px; 
+    border-style: solid; 
+    border-color: green;
+    overflow: auto;
+    min-height:100px;
+    max-height: 100px;
+}
+
+#list {
+    float: left;
+    width: 506px;
+    padding: 4px;
+    margin: 4px 4px 4px 4px;
+    min-height:150px;
+    height: 730px;
+}
+
+#properties {
+    float: left;
+    width: 194px;
+    padding : 8px;
+    margin: 0px 4px 4px 4px;
+    border-width: 2px 2px 2px 2px; 
+    border-style: solid; 
+    border-color: blue;
+    min-height:150px;
+}
+
+#photo {
+    left: 220px;
+    margin-left: 4px;
+    margin-right: 4px;
+    margin-top: 4px;
+    margin-bottom: 4px;
+    padding : 8px;
+    border-width: 2px 2px 2px 2px; 
+    border-style: solid; 
+    border-color: green;
+    overflow: auto;
+    min-height:30px;
+}
+.message {
+    margin:4px;
+    min-height:50px;
+    border:2px solid black;
+}
+/*modif*/
+#search {
+    margin:0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding : 0px;
+    overflow: auto;
+}
+
+.wrapper {
+    max-width: 1800px;
+    margin-left: auto; 
+    margin-right: auto;
+}
+
+.dtTable {
+    table-layout: fixed;
+    display: block;
+    overflow-y: auto; 
+    width: 504px; 
+    max-width: 504px;
+    height: 65vh; 
+    border-collapse: collapse;
+}
+
+.dtTable tr {
+    border-left: 1px solid #000;
+}
+
+.dtTable th, .dtTable td {
+    padding: 5px;
+    border: 1px solid #000;
+}
+
+.ListElement {
+    overflow: hidden; 
+    display: inline-block; 
+    max-height: 20px;  
+    white-space:nowrap;  
+}
+
+@media (max-width: 1112px) {
+
+    .list {
+
+        width: auto;
+    }
+    #properties {
+        float: none;
+    }
+    #detail {
+        left: 0px;
+        margin-left: 4px; 
+        clear: left;
+        max-width: 506px;
+
+    }
+    #search {
+        width: 506px;
+    }
+    .wrapper {
+        max-width: 540px;
+    }
+
+    #list {
+        height: 555px;
+        width: 515px;        
+    }
+
+    .dtTable {
+        height: 548px;
+
+    }   
+}
+
+.UE_List_Section {
+    overflow:hidden;
+    width: 30%; 
+    display: inline-block; 
+    height: 20px;  
+    white-space:nowrap;
+}
+
+.UE_List_Name {
+    overflow:hidden;
+    width: 60%; 
+    display: inline-block; 
+    height: 20px;  
+    white-space:nowrap;
+}
+
+.UE_List_NbPeriods {
+    overflow:hidden;
+    width: 80px; 
+    display: inline-block; 
+    height: 10%;  
+    white-space:nowrap;
+}
+
+
+/*
+#searchF
+{
+    position: relative;
+    top: 1em;
+    
+}
+
+#list, #detail
+{
+    position: relative;
+    top: 1em;
+}*/

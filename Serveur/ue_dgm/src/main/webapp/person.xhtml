@@ -1,0 +1,220 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE composition PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+                xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:p="http://primefaces.org/ui"
+                template="./template.xhtml">
+
+    <ui:define name="title">
+        Gestion des personnes
+    </ui:define>
+
+    <ui:define name="top">
+        <!--<h2>Gestion des personnes</h2>-->
+    </ui:define>
+
+    <ui:define name="search">
+        <h:form id="searchF">
+            <div class="cell">
+                <label>Nom</label>
+                <h:inputText value="#{personController.search.lastName}" />
+            </div>
+            <div class="cell">
+                <label>Prenom</label>
+                <h:inputText value="#{personController.search.firstName}" />
+            </div>
+            <div class="cell">
+                <label>Ville</label>
+                <h:inputText value="#{personController.search.city}" />
+            </div>
+            <div class="cell">
+                <label>Date de naissance</label>
+                <h:inputText value="#{personController.search.dateOfBirth}" />
+            </div>
+            <div class="cell">
+                <label>e-mail</label>
+                <h:inputText value="#{personController.search.email}" />
+            </div>
+
+            <div style="clear:both">
+                <h:commandButton class="searchButton" value="Rechecher"
+                                 action="#{personController.doSearch()}" >   
+                        <f:ajax execute="@form" render=":listF :detailF"/>
+                </h:commandButton>
+            </div>
+        </h:form>
+    </ui:define>
+
+    <ui:define name="list">
+        <div id="list">
+            <h:form id="listF">
+                <h:dataTable var="item" 
+                             value="#{personController.items}" 
+                             cellspacing="0" 
+                             cellpadding="0" 
+                             border="0"
+                             class="dtTable">
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Nom" />
+                        </f:facet>
+                        <h:commandLink  class="ListElement" 
+                                        style="width: 80px;"
+                                        action="#{personController.prepareEdit(item)}" 
+                                        value="#{item.name}" >
+                            <f:ajax execute="@form" render=":detailF :oUeListF"/>
+                        </h:commandLink>
+                    </h:column> 
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Prenom"  />
+                        </f:facet>
+                        <h:outputText value="#{item.firstName}" class="ListElement" 
+                                      style="width: 200px;" />
+                    </h:column>
+                </h:dataTable>
+            </h:form>
+        </div>
+    </ui:define>
+
+    <ui:define name="detail">
+        <h:form id="detailF">
+            <fieldset>
+                <legend id="detailLegend">Personne</legend>
+                <div class="cell">
+                    <label>Nom</label>
+                    <h:inputText value="#{personController.selected.name}" />
+                </div>
+                <div class="cell">
+                    <label>Prenom</label>
+                    <h:inputText value="#{personController.selected.firstName}" />
+                </div>
+                <div class="cell">
+                    <label>Adresse</label>
+                    <h:inputText value="#{personController.selected.address}" />
+                </div>
+                <div class="cell">
+                    <label>Code postal</label>
+                    <h:inputText value="#{personController.selected.postalCode}" />
+                </div>
+                <div class="cell">
+                    <label>Ville</label>
+                    <h:inputText value="#{personController.selected.city}" />
+                </div>
+                <div class="cell">
+                    <label>Pays</label>
+                    <h:inputText value="#{personController.selected.country}" />
+                </div>
+                <div class="cell">
+                    <label>Date de naissance</label>
+                    <h:inputText value="#{personController.selected.dateOfBirth}">
+                        <f:convertDateTime pattern="dd-MM-yyyy" />
+                    </h:inputText>
+                </div>
+                <div class="cell">
+                    <label>Telephone</label>
+                    <h:inputText value="#{personController.selected.mobile}" />
+                </div>
+                <div class="cell">
+                    <label>email</label>
+                    <h:inputText value="#{personController.selected.email}" />
+                </div>
+                <div class="cell">
+                    <label>Professeur</label>
+                    <h:selectBooleanCheckbox value="#{personController.selected.isTeacher}" />
+                </div>
+                <div class="cell">
+                    <label>Jury</label>
+                    <h:selectBooleanCheckbox value="#{personController.selected.isJuryMember}" />
+                </div>
+
+                <div style="clear:both;">
+                    <h:commandButton class="searchButton" action="#{personController.doUpdate()}" 
+                                     value="Sauver" style="margin-top: 6px;"/>
+                    <h:commandButton class="searchButton" action="#{personController.prepareCreate()}" 
+                                     value="Nouveau" style="margin-top: 6px;"/>                        
+                    <h:commandButton class="searchButton" action="#{personController.doDelete()}" 
+                                     value="Supprimer" style="margin-top: 6px;"/>
+                </div>
+            </fieldset>
+        </h:form>  
+
+        <h:form id="regiteringActionF">
+            <fieldset>
+                <legend id="detailLegend">Inscriptions</legend>
+                <div class="cell">
+                    <p:outputLabel value="Section"/>
+                    <p:selectOneMenu id="section" 
+                                     value="#{organizedUeController.searchOUePerson.section}" >
+                        <p:ajax event="valueChange" update="level academicYearOption" listener="#{organizedUeController.doSearchOUePerson()}"/>
+                        <f:selectItems value="#{sectionController.itemsAvailableSelectOne}"/>
+                    </p:selectOneMenu>
+                </div>
+                <div class="cell">
+                    <p:outputLabel value="Niveau"/>
+                    <p:selectOneMenu id="level" 
+                                 value="#{organizedUeController.searchOUePerson.level}" >
+                    <p:ajax event="valueChange" update="section academicYearOption" listener="#{organizedUeController.doSearchOUePerson()}"/>
+                    <f:selectItems value="#{organizedUeController.getItemsAvailableSelectOneLevel(organizedUeController.searchOUePerson)}"/>
+                </p:selectOneMenu>
+                </div>
+                <div class="cell">
+                    <p:outputLabel value="Annee scolaire"/>
+                    <p:selectOneMenu id="academicYearOption" value="#{organizedUeController.searchOUePerson.academicYear}" dynamic="true">
+                        <p:ajax event="valueChange" update="section level" listener="#{organizedUeController.doSearchOUePerson()}"/>
+                        <f:selectItem itemLabel="---" itemValue="#{null}"/>
+                        <f:selectItems value="#{organizedUeController.getAcademicOptions(organizedUeController.searchOUePerson)}" />
+                    </p:selectOneMenu>
+                </div>
+                <p:commandButton class="searchButton" value="Inscrire"
+                                 action="#{organizedUeController.registerStudentInOrganizedUe(organizedUeController.searchOUePerson, personController.selected)}"
+                                 update="oUeListF">                         
+                </p:commandButton>
+            </fieldset>
+        </h:form>
+
+        <h:form id="oUeListF">
+            <fieldset>
+                <legend id="detailLegend">Liste des inscriptions</legend>
+                <h:dataTable var="item" 
+                             value="#{organizedUeController.getOrganizedUeList(personController.selected)}" 
+                             cellspacing="0" 
+                             cellpadding="0" 
+                             border="0"
+                             class="dtTable widthAdd"> <!--class="dtTable"-->
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Section" />
+                        </f:facet>
+                        <h:outputText value="#{item.ue.section.name}" class="ListElement" />
+                    </h:column> 
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="UE"  />
+                        </f:facet>
+                        <h:outputText value="#{item.ue.name}" class="ListElement" />
+                    </h:column>
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Niveau"  />
+                        </f:facet>
+                        <h:outputText value="#{item.level.name}" class="ListElement" />
+                    </h:column>
+                    <h:column class="dtTD" >
+                        <f:facet name="header">
+                            <h:outputText value="Date de debut"  />
+                        </f:facet>
+                        <h:outputText value="#{item.startDate}" class="ListElement">
+                            <f:convertDateTime pattern="dd-MM-yyyy" />
+                        </h:outputText>
+                    </h:column>
+                </h:dataTable>
+            </fieldset>
+        </h:form> 
+
+
+    </ui:define>
+
+</ui:composition>

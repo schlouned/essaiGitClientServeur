@@ -1,0 +1,48 @@
+<?xml version='1.0' encoding='UTF-8' ?> 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://xmlns.jcp.org/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html">
+
+    <h:head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <title><ui:insert name="title">Gestion ecole de promotion sociale</ui:insert></title>
+        <h:outputStylesheet library="css" name="jsfcrud.css"/>
+        <h:outputStylesheet library="css" name="es_1.css"/>
+        <h:outputScript library = "js" name = "function.js" />
+    </h:head>
+
+    <h:body onload = "refreshMenu()">
+        <div class="wrapper">
+            <img id="pictureIsl" src="picture/logoISL_0.png" alt="GESTION ISL"/>
+            <div id="top">
+                <ui:insert name="top">Top</ui:insert>
+            </div>
+
+            <div id="menu">
+                <h:form id="formMenu" class="indexMenu">
+                    <h:commandLink id="indexHtml" class="indexButton" action="index.xhtml" value="Index"/>
+                    <h:commandLink id="personHtml" class="indexButton" action="person.xhtml" value="Personne"/>
+                    <h:commandLink id="sectionHtml" class="indexButton" action="section.xhtml" value="Section"/>
+                    <h:commandLink id="ueHtml" class="indexButton" action="ue.xhtml" value="Ue"/>
+                    <h:commandLink id="organizedUeHtml" class="indexButton" action="organizedUe.xhtml" value="Ue Organises"/>
+                    <h:commandLink id="planningHtml" class="indexButton" action="planning.xhtml" value="Planning"/>
+                    <h:commandLink id="presenceHtml" class="indexButton" action="presence.xhtml" value="Presences"/>&nbsp;
+                </h:form>
+
+            </div>
+            <div id="search">
+                <ui:insert name="search"></ui:insert>
+            </div>
+
+            <ui:insert name="list"></ui:insert>
+
+            <div id="detail">
+                <ui:insert name="detail"></ui:insert>
+            </div>
+        </div>
+
+
+    </h:body>
+
+</html>

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+  <!-- Define Persistence Unit -->
+  <persistence-unit name="ue_pu" transaction-type="JTA">
+    <jta-data-source>java:app/Ue</jta-data-source>
+    <class>be.isl.ue.entity.Person</class>
+    <class>be.isl.ue.entity.Indicator</class>
+    <class>be.isl.ue.entity.Ueorga</class>
+    <class>be.isl.ue.entity.Capacity</class>
+    <class>be.isl.ue.entity.Ue</class>
+    <class>be.isl.ue.entity.Planning</class>
+    <class>be.isl.ue.entity.Presence</class>
+    <class>be.isl.ue.entity.OrganizedUe</class>
+    <class>be.isl.ue.entity.Section</class>
+    <class>be.isl.ue.entity.Level</class>
+    <class>be.isl.ue.entity.StudentOrganizedUe</class>
+    <class>be.isl.ue.entity.Evaluation</class>
+    <class>be.isl.ue.entity.PersonSecurity</class>
+    <class>be.isl.ue.entity.Sequence</class>
+    <properties>
+        <property name="eclipselink.logging.level" value="FINE"/>
+        <property name="eclipselink.logging.level.sql" value="FINE"/>
+        <property name="eclipselink.logging.timestamp" value="true"/>
+    </properties>
+  </persistence-unit>
+</persistence>
